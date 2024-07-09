@@ -124,8 +124,8 @@ END;
 DECLARE
   l_clob CLOB := 'This is a sample attachement data send it as attachement!';
 BEGIN
-  send_mail_clob(p_to          => 'vibhor.kumar@enterprisedb.com',
-            p_from        => 'vibhor.aim@gmail.com',
+  send_mail_clob(p_to          => 'xxxx@edb.com',
+            p_from        => 'xxxx@gmail.com',
             p_subject     => 'Rocky Linux 8 Message',
             p_text_msg    => 'Please find attached file',
             p_attach_name => 'test.txt',
