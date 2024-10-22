@@ -1,0 +1,50 @@
+In oracle -
+DECLARE
+  stmt VARCHAR2(200);
+  dept_no_array DBMS_SQL.NUMBER_TABLE;
+  c NUMBER;
+  dummy NUMBER;
+begin
+  dept_no_array(1) := 10; dept_no_array(2) := 20;
+  dept_no_array(3) := 30; dept_no_array(4) := 40;
+  dept_no_array(5) := 30; dept_no_array(6) := 40;
+  stmt := 'delete from emp where deptno = :dept_array';
+  c := DBMS_SQL.OPEN_CURSOR;
+  DBMS_SQL.PARSE(c, stmt, DBMS_SQL.NATIVE);
+  DBMS_SQL.BIND_ARRAY(c, ':dept_array', dept_no_array, 1, 4);
+  dummy := DBMS_SQL.EXECUTE(c);
+  DBMS_SQL.CLOSE_CURSOR(c);
+
+  EXCEPTION WHEN OTHERS THEN
+    IF DBMS_SQL.IS_OPEN(c) THEN
+      DBMS_SQL.CLOSE_CURSOR(c);
+    END IF;
+    RAISE;
+END;
+
+In EPAS -
+DECLARE
+  stmt VARCHAR2(200);
+  dept_no_array NUMBER[];
+  c NUMBER;
+  dummy NUMBER;
+begin
+  dept_no_array[1] := 10; dept_no_array[2] := 20;
+  dept_no_array[3] := 30; dept_no_array[4] := 40;
+  dept_no_array[5] := 30; dept_no_array[6] := 40;
+  stmt := 'delete from emp where deptno = :dept_array';
+  c := DBMS_SQL.OPEN_CURSOR;
+  DBMS_SQL.PARSE(c, stmt, DBMS_SQL.NATIVE);
+  FOR i in 1..4
+  LOOP
+     DBMS_SQL.BIND_VARIABLE(c, ':dept_array', dept_no_array[i]);
+     dummy := DBMS_SQL.EXECUTE(c);
+  END LOOP;
+  DBMS_SQL.CLOSE_CURSOR(c);
+
+  EXCEPTION WHEN OTHERS THEN
+    IF DBMS_SQL.IS_OPEN(c) THEN
+      DBMS_SQL.CLOSE_CURSOR(c);
+    END IF;
+    RAISE;
+END;
